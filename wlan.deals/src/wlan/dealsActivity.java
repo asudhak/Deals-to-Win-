@@ -2,6 +2,7 @@ package wlan;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 
 import edu.wlan.deals.R;
 
@@ -16,7 +17,6 @@ import android.widget.Toast;
 public class dealsActivity extends Activity {
     /** Called when the activity is first created. */
 	
-	//GIT TEST 
 	
 	public XMLRPCClient client;
     @Override
@@ -37,11 +37,11 @@ public class dealsActivity extends Activity {
         Toast.makeText(getBaseContext(), "IP: " + addr.toString(), 4).show();
         
         
-        Integer result=0;
+        Object result=0;
         Object[] params = new Object[]{new Integer(33), new Integer(9)};
         try {
-    		//result = (Integer) client.execute("Calculator.add", params);
-    		result = (Integer)client.callEx("Calculator.add", params);
+    		
+    		result = (Object) client.callEx("Calculator.add", params);
     		Toast.makeText(getBaseContext(), "Try", 4).show();
     		
     	} catch (XMLRPCException e) {
@@ -49,9 +49,10 @@ public class dealsActivity extends Activity {
     		e.printStackTrace();
     	}
     	
+        HashMap h1=(HashMap)result;
         
-        System.out.print(""+result);
-        Log.d("REsult", ""+result);
+        System.out.print(""+h1.toString());
+        
         Toast.makeText(getBaseContext(), "Result: " + result, 4).show();
         
         
