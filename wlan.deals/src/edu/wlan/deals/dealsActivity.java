@@ -1,4 +1,4 @@
-package wlan;
+package edu.wlan.deals;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

@@ -6,19 +6,47 @@
 
     <uses-sdk android:minSdkVersion="10" />
     <uses-permission android:name="android.permission.INTERNET"/>
-
+    <permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-library android:name="com.google.android.maps" />
+	
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        <activity
-            android:name="wlan.dealsActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
+        
+         <activity android:name=".mainUITabs" android:label="@string/app_name"
+          android:theme="@android:style/Theme.NoTitleBar">
+          <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+ 
+            </activity>
+        
+        <activity
+            android:name="edu.wlan.deals.dealsActivity"
+            android:label="@string/app_name" >
+            
         </activity>
+        
+        <activity
+            android:name=".LocationRepresenter"
+            android:label="@string/app_name" >
+                   </activity>
+        
+        <activity
+            android:name="edu.wlan.deals.MyDeals"
+            android:label="@string/app_name" >
+                   </activity>
+       
+            <service android:enabled="true" android:name="edu.wlan.deals.updateRingerService" />
+            
+       
+        
+        
     </application>
 
 </manifest>
