@@ -16,6 +16,8 @@ import android.widget.Toast;
 public class dealsActivity extends Activity {
     /** Called when the activity is first created. */
 	
+	//GIT TEST 
+	
 	public XMLRPCClient client;
     @Override
     public void onCreate(Bundle savedInstanceState) {
