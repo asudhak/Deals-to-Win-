@@ -20,5 +20,11 @@
         android:onClick="getData"
         
         ></Button>
+       
+       <ListView
+    android:id="@+id/listView"
+    android:layout_width="fill_parent"
+    android:layout_height="234dp" >
+</ListView>
      
  </LinearLayout>    
