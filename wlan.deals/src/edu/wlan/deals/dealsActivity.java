@@ -2,7 +2,9 @@ package edu.wlan.deals;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import edu.wlan.deals.R;
 
@@ -21,9 +23,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +39,7 @@ public class dealsActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test);
+        setContentView(R.layout.tab1);
         
         client = new XMLRPCClient("http://192.168.0.5:8080/xmlrpc");
         InetAddress addr=null;
@@ -47,48 +51,25 @@ public class dealsActivity extends Activity {
 		}
         
         Log.i("IP address:",""+addr.toString());
-        Toast.makeText(getBaseContext(), "IP: " + addr.toString(), 4).show();
-        
-        
-        Object result=0;
-        Object[] params = new Object[]{new Integer(33), new Integer(9)};
-        try {
-    		
-    		result = (Object) client.callEx("Calculator.add", params);
-    		Toast.makeText(getBaseContext(), "Try", 4).show();
-    		
-    	} catch (XMLRPCException e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();
-    	}
-    	
-        HashMap h1=(HashMap)result;
-        
-        System.out.print(""+h1.toString());
-        
-        Toast.makeText(getBaseContext(), "Result: " + result, 4).show();
-        
-        
-        
+         
     }
     
-    public void getData(Context c)
+    public void getData(View V)
     {
 
-        	final Context toastContext=c;
-        	   final Dialog dialog = new Dialog(c);
+        	final Context toastContext=getBaseContext();
+//        	Context c=this.getBaseContext();
+        	   final Dialog dialog = new Dialog(this);
                dialog.setContentView(R.layout.alert_dialog_layout);
                dialog.setTitle("Select Preferneces");
                dialog.setCancelable(true);
-               //there are a lot of settings, for dialog, check them all out!
-
-               //set up text
+              
                
              final RadioGroup mRadioGroup = (RadioGroup) dialog.findViewById(R.id.group1);
              mRadioGroup.check(R.id.food);
              final SeekBar dia = (SeekBar)dialog.findViewById(R.id.seekbar);
              
-             Button button_get = (Button) dialog.findViewById(R.id.getData);
+             Button button_get = (Button) dialog.findViewById(R.id.getDeals);
              Button button_cancel=(Button) dialog.findViewById(R.id.dismiss);
              button_cancel.setOnClickListener(new OnClickListener() {
     			@Override
@@ -102,8 +83,6 @@ public class dealsActivity extends Activity {
             	   public void onClick(View v) {
     //CALL ADDTO DB HERE
             		   
-                	   
-                          
                           int selected_pref=R.id.food;
                           try{selected_pref=mRadioGroup.getCheckedRadioButtonId();}
                           catch(NullPointerException e){
@@ -117,7 +96,9 @@ public class dealsActivity extends Activity {
                           String selected_profile_String=checkedRadioButton.getText().toString();
                           //Toast.makeText(toastContext, "The Choice is: "+checkedRadioButton.getText().toString()+" with dia:" + dia_location, 5).show();
                      
-                          Toast.makeText(getBaseContext(), "You selected: "+ selected_profile_String,	 4).show();
+                          //RPC CALL
+                                                   makeRPCcall();
+                          //END OF RPC CALL
                           
                           dialog.dismiss();
                      }
@@ -126,8 +107,58 @@ public class dealsActivity extends Activity {
                    
                dialog.show();
 
+              
        
         
     }
+    
+    public void makeRPCcall()
+    {
+    	 Object result=0;
+         Object[] params = new Object[]{new Integer(33), new Integer(9)};
+         try {
+     		
+     		result = (Object) client.callEx("Calculator.add", params);
+     		Toast.makeText(getBaseContext(), "Try", 4).show();
+     		
+     	} catch (XMLRPCException e) {
+     		// TODO Auto-generated catch block
+     		e.printStackTrace();
+     	}
+     	
+         HashMap h1=(HashMap)result;
+         
+         ArrayList list=new ArrayList();
+         list.add(h1);
+         
+         updateListView(list);
+         
+         System.out.print(""+h1.toString());
+         
+         Toast.makeText(getBaseContext(), "Result: " + result, 4).show();
+         
+    }
+    
+    
+    public void updateListView(ArrayList list)
+    {
+    	   
+   	    
+   	    String[] from = { "Name", "Type", "Dist" };
+   		int[] to = {R.id.name, R.id.type ,R.id.dist};
+   		
+   		
+   		System.out.println(list.toString());
+   	    
+   	    SimpleAdapter adapter = new SimpleAdapter(this, list,
+   				R.layout.row, from, to);
+   	    
+   	    final ListView listView = (ListView) findViewById(R.id.listView);
+   	    
+   	    listView.setAdapter(adapter);
+   	      listView.setTextFilterEnabled(true);
+    }
+    
+    
     
 }
