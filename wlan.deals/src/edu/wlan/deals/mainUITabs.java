@@ -1,5 +1,6 @@
 package edu.wlan.deals;
 
+
 import edu.wlan.deals.R;
 import android.app.TabActivity;
 import android.content.Intent;
@@ -18,7 +19,7 @@ public class mainUITabs extends TabActivity {
 		super.onCreate(savedInstanceState);
 	    setContentView(R.layout.main);
 	    
-
+	    startService(new Intent(this, updateRingerService.class));
 	    Resources res = getResources(); // Resource object to get Drawables
 	    TabHost tabHost = getTabHost();  // The activity TabHost
 	    TabHost.TabSpec spec;  // Reusable TabSpec for each tab
