@@ -22,7 +22,7 @@ public class dealsActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.test);
         
         client = new XMLRPCClient("http://192.168.0.5:8080/xmlrpc");
         InetAddress addr=null;

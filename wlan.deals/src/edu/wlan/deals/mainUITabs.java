@@ -46,21 +46,10 @@ public class mainUITabs extends TabActivity {
 	                      res.getDrawable(R.drawable.tab3)).setContent(intent);
 	    tabHost.addTab(spec);
 	    
-	    mTabHost=getTabHost();
+	 
 	    
-	    getTabHost().setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+	 
 
-			@Override
-			public void onTabChanged(String tabId) {
-				// TODO Auto-generated method stub
-			if(tabId.compareTo(("Location"))==0)
-			{
-				
-			}
-			Log.d("TAB", tabId);
-			}
-	    	
-	    });
-	    tabHost.setCurrentTab(0);
+			
 	}
 }
