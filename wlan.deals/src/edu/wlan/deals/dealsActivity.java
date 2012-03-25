@@ -116,9 +116,10 @@ public class dealsActivity extends Activity {
     {
     	 Object result=0;
          Object[] params = new Object[]{new Integer(33), new Integer(9)};
+         params=null;
          try {
      		
-     		result = (Object) client.callEx("Calculator.add", params);
+     		result = (Object) client.callEx("Calculator.getData", params);
      		Toast.makeText(getBaseContext(), "Try", 4).show();
      		
      	} catch (XMLRPCException e) {
@@ -126,14 +127,15 @@ public class dealsActivity extends Activity {
      		e.printStackTrace();
      	}
      	
-         HashMap h1=(HashMap)result;
+//         HashMap h1=(HashMap)result;
+         Toast.makeText(getBaseContext(), "Result: " + result, 4).show();
          
-         ArrayList list=new ArrayList();
-         list.add(h1);
+//         ArrayList list=(ArrayList)result;
          
-         updateListView(list);
          
-         System.out.print(""+h1.toString());
+//         updateListView(list);
+         
+         //System.out.print(""+h1.toString());
          
          Toast.makeText(getBaseContext(), "Result: " + result, 4).show();
          
