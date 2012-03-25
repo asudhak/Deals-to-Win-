@@ -114,30 +114,42 @@ public class dealsActivity extends Activity {
     
     public void makeRPCcall()
     {
-    	 Object result=0;
+//    	 Object result=0;
+//    	ArrayList<Map<String, String>> result=new ArrayList<Map<String, String>>();
+//    	HashMap result= new HashMap();4
+//    	Object[] result= new Object[3];
          Object[] params = new Object[]{new Integer(33), new Integer(9)};
-         params=null;
+       ArrayList list=new ArrayList();
+//         params=null;
          try {
      		
-     		result = (Object) client.callEx("Calculator.getData", params);
+     		Object[] result = (Object[])client.callEx("Calculator.add", params);
      		Toast.makeText(getBaseContext(), "Try", 4).show();
+     		 for(int i=0;i<result.length;i++)
+             {
+            	 list.add(result[i]);
+             }
      		
      	} catch (XMLRPCException e) {
      		// TODO Auto-generated catch block
      		e.printStackTrace();
      	}
+         
+         
+         
+        
      	
 //         HashMap h1=(HashMap)result;
-         Toast.makeText(getBaseContext(), "Result: " + result, 4).show();
+//         Toast.makeText(getBaseContext(), "Result: " + result, 4).show();
          
 //         ArrayList list=(ArrayList)result;
          
          
-//         updateListView(list);
+         updateListView(list);
          
          //System.out.print(""+h1.toString());
          
-         Toast.makeText(getBaseContext(), "Result: " + result, 4).show();
+//         Toast.makeText(getBaseContext(), "Result: " + result, 4).show();
          
     }
     
@@ -149,6 +161,12 @@ public class dealsActivity extends Activity {
    	    String[] from = { "Name", "Type", "Dist" };
    		int[] to = {R.id.name, R.id.type ,R.id.dist};
    		
+   		/*
+   		ArrayList list=new ArrayList();
+   		list.add(h);
+   		list.add(h);
+   		list.add(h);
+  */
    		
    		System.out.println(list.toString());
    	    
