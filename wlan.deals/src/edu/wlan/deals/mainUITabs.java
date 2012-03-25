@@ -35,7 +35,7 @@ public class mainUITabs extends TabActivity {
 	    
 
 	    // Do the same for the other tabs
-	    intent = new Intent().setClass(this, MyDeals.class);
+	    intent = new Intent().setClass(this, LocationRepresenter.class);
 	    spec = tabHost.newTabSpec("Location").setIndicator("Location",
 	                      res.getDrawable(R.drawable.tab2)).setContent(intent);
 	    tabHost.addTab(spec);
