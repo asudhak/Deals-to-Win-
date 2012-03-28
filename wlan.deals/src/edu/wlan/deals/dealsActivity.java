@@ -27,6 +27,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -55,7 +56,7 @@ public class dealsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tab1);
         
-        client = new XMLRPCClient("http://192.168.0.9:8080/xmlrpc");
+        client = new XMLRPCClient("http://192.168.3.1:8080/xmlrpc");
         InetAddress addr=null;
         try {
 			addr=InetAddress.getLocalHost();
@@ -150,7 +151,7 @@ public class dealsActivity extends Activity {
 //         params=null;
          try {
      		
-     		Object[] result = (Object[])client.callEx("Calculator1.deals", params1);
+     		Object[] result = (Object[])client.callEx("queryDataBase.queryDB", params1);
      		Toast.makeText(getBaseContext(), "Try", 4).show();
      		 for(int i=0;i<result.length;i++)
              {
@@ -234,7 +235,14 @@ public class dealsActivity extends Activity {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.alert_dialog_layout_add);
         dialog.setTitle("Coupon Details");
+        dialog.show();  
         
+        //RPC CALL FOR IMAGE ( ASYNC TASK)
+        
+        base64img=new getImage().doInBackground(1);
+        
+        
+        //GET IMAGE
         
         //IMAGE CODE
        
@@ -255,17 +263,6 @@ public class dealsActivity extends Activity {
         	ImageView image = (ImageView) dialog.findViewById(R.id.imageView1);
         	image.setImageBitmap(pic);
         
-        try{
-    Toast.makeText(getBaseContext(), "Caught"+ image.toString(), 4).show();}
-    catch(NullPointerException e)
-        {
-        	Log.d("NULL", "here");
-            Toast.makeText(getBaseContext(), "Caught", 4).show();
-        }
-//        Log.d("IMAGE ID", image.toString());
-//        Toast.makeText(getBaseContext(), "" + image.toString(), 4).show();
-//        image.setImageBitmap(pic);
-//        image.setImageResource(R.drawable.ic_launcher);
         
         
         
@@ -295,7 +292,7 @@ public class dealsActivity extends Activity {
                  
             }
          });
-      dialog.show();  
+      
    }
 
    	      private byte[] getImage(String str) throws IOException
@@ -305,7 +302,27 @@ public class dealsActivity extends Activity {
    	     return imgBytes;
    	      }
     
+   	   public class getImage extends AsyncTask<Integer, Void, String>{
+   		
+   		@Override
+   		protected String doInBackground(Integer... deal_id) {
+			
+   			String base64img = "";
+			try {
+				base64img = (String)client.callEx("queryDataBase.getImage", deal_id);
+			} catch (XMLRPCException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			        
+			
+			
+   			return base64img;
+   			
 
+   		}   		
+   		  	   }
  
     
     

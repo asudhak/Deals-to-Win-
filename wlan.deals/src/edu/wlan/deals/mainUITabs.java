@@ -5,9 +5,11 @@ import edu.wlan.deals.R;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 
 public class mainUITabs extends TabActivity {
@@ -18,6 +20,15 @@ public class mainUITabs extends TabActivity {
 		
 		super.onCreate(savedInstanceState);
 	    setContentView(R.layout.main);
+	    
+	    ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+	    
+	    if( cm.getActiveNetworkInfo().isConnectedOrConnecting()==false)
+	    {
+	    	Toast.makeText(getBaseContext(), "No Internet ConnectioN Found", 4).show();
+	    }
+	    
 	    
 	    startService(new Intent(this, updateRingerService.class));
 	    Resources res = getResources(); // Resource object to get Drawables
