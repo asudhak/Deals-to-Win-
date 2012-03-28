@@ -28,5 +28,13 @@
 		android:layout_weight="1"
 		android:textSize="18sp"
 		android:gravity="right"></TextView>
+	<TextView
+		android:layout_width="0px"
+		android:layout_height="0px"
+		android:id="@+id/image"
+		android:text="Value"
+		android:layout_weight="1"
+		android:textSize="18sp"
+		android:gravity="right"></TextView>
 	
 </LinearLayout>

@@ -25,7 +25,7 @@ package org.xmlrpc.android;
  * &nbsp; New method decode(String) added.<br>
  */
 
-class Base64Coder {
+public class Base64Coder {
 
 	// Mapping table from 6-bit nibbles to Base64 characters.
 	private static char[] map1 = new char[64];
@@ -135,7 +135,7 @@ class Base64Coder {
 	 * @throws IllegalArgumentException
 	 *             if the input is not valid Base64 encoded data.
 	 */
-	static byte[] decode(String s) {
+	public static byte[] decode(String s) {
 		return decode(s.toCharArray());
 	}
 
