@@ -28,6 +28,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -77,9 +78,28 @@ public class dealsActivity extends Activity {
 //        	Context c=this.getBaseContext();
         	   dialog = new Dialog(this);
                dialog.setContentView(R.layout.alert_dialog_layout);
-               dialog.setTitle("Select Preferneces");
+               dialog.setTitle("Select Preferences");
                dialog.setCancelable(true);
               
+               
+               ConnectivityManager cm =
+                       (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+               
+               Log.d("Connection Manager", cm.toString());
+       	    
+               dialog.show();
+       	  try{  if( cm==null||cm.getActiveNetworkInfo().isConnectedOrConnecting()==false)
+       	    {
+       	    	Toast.makeText(getBaseContext(), "No Internet ConnectioN Found", 4).show();
+       	    	dialog.dismiss();
+       	    }}
+       	  catch(NullPointerException e)
+       	  {
+       		Toast.makeText(getBaseContext(), "No Internet ConnectioN Found", 4).show();
+       		  dialog.dismiss();
+       	  }
+               
+               
                
              final RadioGroup mRadioGroup = (RadioGroup) dialog.findViewById(R.id.group1);
              mRadioGroup.check(R.id.food);
@@ -131,21 +151,14 @@ public class dealsActivity extends Activity {
                });   
                
                    
-               dialog.show();
+               
 
               
     }
     
     public void makeRPCcall(Object[] params)
     {
-//    	 Object result=0;
-//    	ArrayList<Map<String, String>> result=new ArrayList<Map<String, String>>();
-//    	HashMap result= new HashMap();4
-//    	Object[] result= new Object[3];
-    	
-    	//NEED TO CHANGE HERE, need to add location
-    	
-    	
+	
     	
          Object[] params1 = new Object[]{new Integer(33), new Integer(9)};
        ArrayList list=new ArrayList();
@@ -166,27 +179,12 @@ public class dealsActivity extends Activity {
      		Toast.makeText(getBaseContext(), e.getMessage(), 4).show();
      		e.printStackTrace();
      	}
-         /*
-      
-       try {
-		Object result = (Object)client.callEx("Calculator.add", params);
-	} catch (XMLRPCException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}*/
-        
-     	
-//         HashMap h1=(HashMap)result;
-//         Toast.makeText(getBaseContext(), "Result: " + result, 4).show();
          
-//         ArrayList list=(ArrayList)result;
          
          
          updateListView(list);
          
-         //System.out.print(""+h1.toString());
-         
-//         Toast.makeText(getBaseContext(), "Result: " + result, 4).show();
+  
          
     }
     
@@ -198,14 +196,7 @@ public class dealsActivity extends Activity {
     	 String[] from = {"Id" ,"Name", "Type", "Dist" , "Image", "Desc"};
     		int[] to = {R.id.id,R.id.name, R.id.type ,R.id.dist , R.id.image, R.id.desc};
    		
-   		/*
-   		ArrayList list=new ArrayList();
-   		list.add(h);
-   		list.add(h);
-   		list.add(h);
-  */
    		
-//   		System.out.println(list.toString());
    	    
    	    SimpleAdapter adapter = new SimpleAdapter(this, list,
    				R.layout.row, from, to);

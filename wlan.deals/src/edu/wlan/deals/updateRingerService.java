@@ -27,6 +27,8 @@ public class updateRingerService extends Service {
 	LocationListener GPSListener;
 	
 	
+	
+	
 //	LocationManager locationManager;
 //	public static Location location;
 	

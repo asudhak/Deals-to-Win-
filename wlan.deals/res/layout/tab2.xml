@@ -17,6 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Refresh"
+        android:onClick="refresh1"
         ></Button>
 
 <com.google.android.maps.MapView

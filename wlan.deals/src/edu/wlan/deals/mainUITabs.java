@@ -24,10 +24,15 @@ public class mainUITabs extends TabActivity {
 	    ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
 	    
-	    if( cm.getActiveNetworkInfo().isConnectedOrConnecting()==false)
+	   try{ if( cm.getActiveNetworkInfo().isConnectedOrConnecting()==false)
 	    {
 	    	Toast.makeText(getBaseContext(), "No Internet ConnectioN Found", 4).show();
-	    }
+	    }}
+	   catch(NullPointerException e)
+    	  {
+    		Toast.makeText(getBaseContext(), "No Internet ConnectioN Found", 4).show();
+    		  
+    	  }
 	    
 	    
 	    startService(new Intent(this, updateRingerService.class));

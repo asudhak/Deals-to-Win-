@@ -5,6 +5,7 @@ import java.util.List;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.maps.MapActivity;
@@ -20,7 +21,10 @@ public class LocationRepresenter extends MapActivity {
 	static MapController mapController;
 	static LocPositionOverlay positionOverlay;
 	public static Double geoLat, geoLong;
-	 
+	
+	
+	
+		 
 	 @Override
 	  protected boolean isRouteDisplayed() {
 	    return false;
@@ -34,6 +38,7 @@ public class LocationRepresenter extends MapActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tab2);
      
+        
         //MAP CODE=================================================
         final MapView myMapView = (MapView) findViewById(R.id.myMapView);
         mapController = myMapView.getController();
@@ -50,14 +55,20 @@ public class LocationRepresenter extends MapActivity {
         overlays.add(positionOverlay);
         
         
+        
      	
         
     }
-
-
-	
     
-   
+    public void refresh1(View v)
+    {
+    	TextView location = (TextView)findViewById(R.id.location);
+    	location.setText("Lat: "+  LocationRepresenter.location.getLatitude()+ " \n" + "Long: "+ LocationRepresenter.location.getLongitude());
+    	
+    	
+    }
+
+       
     }
 
 
