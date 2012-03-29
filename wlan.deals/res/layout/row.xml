@@ -4,6 +4,14 @@
 	android:layout_height="wrap_content"
 	android:padding="5sp"
 	android:layout_width="fill_parent">
+<TextView
+		android:layout_width="0px"
+		android:layout_height="0px"
+		android:id="@+id/id"
+		android:text="Value"
+		android:layout_weight="1"
+		android:textSize="18sp"
+		android:gravity="right"></TextView>
 	<TextView
 		android:layout_height="wrap_content"
 		android:id="@+id/name"
@@ -36,5 +44,17 @@
 		android:layout_weight="1"
 		android:textSize="18sp"
 		android:gravity="right"></TextView>
+	
+	<TextView
+		android:layout_width="0px"
+		android:layout_height="0px"
+		android:id="@+id/desc"
+		android:text="Value"
+		android:layout_weight="1"
+		android:textSize="18sp"
+		android:gravity="right"></TextView>
+	
+	
+	
 	
 </LinearLayout>

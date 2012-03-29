@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class dealsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tab1);
         
-        client = new XMLRPCClient("http://192.168.3.1:8080/xmlrpc");
+        client = new XMLRPCClient("http://192.168.0.4:80/xmlrpc");
         InetAddress addr=null;
         try {
 			addr=InetAddress.getLocalHost();
@@ -68,13 +69,13 @@ public class dealsActivity extends Activity {
         Log.i("IP address:",""+addr.toString());
          
     }
-    
+    public Dialog dialog;
     public void getData(View V)
     {
 
         	final Context toastContext=getBaseContext();
 //        	Context c=this.getBaseContext();
-        	   final Dialog dialog = new Dialog(this);
+        	   dialog = new Dialog(this);
                dialog.setContentView(R.layout.alert_dialog_layout);
                dialog.setTitle("Select Preferneces");
                dialog.setCancelable(true);
@@ -194,8 +195,8 @@ public class dealsActivity extends Activity {
     {
     	   
    	    
-   	    String[] from = { "Name", "Type", "Dist" , "Image"};
-   		int[] to = {R.id.name, R.id.type ,R.id.dist , R.id.image};
+    	 String[] from = {"Id" ,"Name", "Type", "Dist" , "Image", "Desc"};
+    		int[] to = {R.id.id,R.id.name, R.id.type ,R.id.dist , R.id.image, R.id.desc};
    		
    		/*
    		ArrayList list=new ArrayList();
@@ -220,54 +221,44 @@ public class dealsActivity extends Activity {
                    long arg3) {
                
                Toast.makeText(getBaseContext(), ((TextView)arg1.findViewById(R.id.name)).getText(),4).show();
-               popDialog((((TextView)arg1.findViewById(R.id.name)).getText()).toString(),
+               popDialog((((TextView)arg1.findViewById(R.id.id)).getText()).toString(),
+            		   (((TextView)arg1.findViewById(R.id.name)).getText()).toString(),
             		   (((TextView)arg1.findViewById(R.id.type)).getText()).toString(),
             		   (((TextView)arg1.findViewById(R.id.dist)).getText()).toString(),
-            		   (((TextView)arg1.findViewById(R.id.image)).getText()).toString());
+            		   (((TextView)arg1.findViewById(R.id.image)).getText()).toString(),
+            		   (((TextView)arg1.findViewById(R.id.desc)).getText()).toString());
            }
 
           });
 
    	     
    }
-    public void popDialog(String name,String type,String mile, String base64img) {
-        final String n=name, t=type, m=mile;
+    
+    public Bitmap bm;
+    
+    public void popDialog(String id,String name,String type,String mile, String base64img,String desc) {
+        final String n=name, t=type, m=mile ,d=desc;
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.alert_dialog_layout_add);
         dialog.setTitle("Coupon Details");
         dialog.show();  
         
-        //RPC CALL FOR IMAGE ( ASYNC TASK)
-        
-        base64img=new getImage().doInBackground(1);
-        
-        
-        //GET IMAGE
-        
-        //IMAGE CODE
-       
-        byte[] imgBytes = null;
-		try {
-			imgBytes = getImage(base64img);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-			
-        BitmapFactory Bm= new BitmapFactory();
-        Bitmap pic=Bm.decodeByteArray(imgBytes,0,imgBytes.length);
         
         
         
+        
+  
         
         	ImageView image = (ImageView) dialog.findViewById(R.id.imageView1);
-        	image.setImageBitmap(pic);
-        
-        
-        
-        
-        //END OF IMAGE CODE
-        
+
+       
+        	TextView tv1 = (TextView) dialog.findViewById(R.id.dealname);
+            tv1.setText(name);
+            
+            
+            TextView tv2 = (TextView) dialog.findViewById(R.id.desc);
+            tv2.setText(desc);
+        	
         
         
         dialog.setCancelable(true);
@@ -282,17 +273,24 @@ public class dealsActivity extends Activity {
             }
         });
         
+        
+        getImage asyncImage= new getImage(image, btn);
+        asyncImage.execute(Integer.parseInt(id)); //Change id
+    
+        btn.setVisibility(4);
+        
+        
          btn.setOnClickListener(new OnClickListener(){
              public void onClick(View v){   
                  DatabaseHelper db = new DatabaseHelper(getBaseContext());
                  
-                   db.insert(n, t, Double.parseDouble(m));
+                 db.insert(n, t, Double.parseDouble(m),d,bm);
                  Toast.makeText(getBaseContext(), "Coupon Bought",4).show();
                  dialog.dismiss();
                  
             }
          });
-      
+         
    }
 
    	      private byte[] getImage(String str) throws IOException
@@ -302,10 +300,18 @@ public class dealsActivity extends Activity {
    	     return imgBytes;
    	      }
     
-   	   public class getImage extends AsyncTask<Integer, Void, String>{
+   	   public class getImage extends AsyncTask<Integer, Void, Bitmap>{
+   		private final WeakReference<ImageView> imageViewReference;
+   		private final WeakReference<Button> ButtonReference;
+   		
+   		public getImage(ImageView imageView, Button button) {
+   			imageViewReference = new WeakReference<ImageView>(imageView);
+   			ButtonReference = new WeakReference<Button>(button);
+   			
+   			    }
    		
    		@Override
-   		protected String doInBackground(Integer... deal_id) {
+   		protected Bitmap doInBackground(Integer... deal_id) {
 			
    			String base64img = "";
 			try {
@@ -314,14 +320,38 @@ public class dealsActivity extends Activity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			        
-			
-			
-   			return base64img;
+			 byte[] imgBytes = null;
+				try {
+					imgBytes = getImage(base64img);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				BitmapFactory Bm= new BitmapFactory();
+		        Bitmap pic=Bm.decodeByteArray(imgBytes,0,imgBytes.length);
+		        
+		        bm=pic;
+					
+   			return pic;
    			
 
-   		}   		
+   		}  
+   		
+   		
+		protected void onPostExecute(Bitmap img) {
+   			Toast.makeText(getBaseContext(), "Post", 4).show();
+   		 if (imageViewReference != null) {
+		           ImageView imageView = imageViewReference.get();
+		            if (imageView != null) {
+		                imageView.setImageBitmap(img);
+		            }
+		        }
+	
+   		 Button visible_but=ButtonReference.get();
+   		 visible_but.setVisibility(0);
+		}
+   		
    		  	   }
  
     

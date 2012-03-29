@@ -5,6 +5,7 @@ import java.util.List;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -52,6 +53,9 @@ public class LocationRepresenter extends MapActivity {
      	
         
     }
+
+
+	
     
    
     }

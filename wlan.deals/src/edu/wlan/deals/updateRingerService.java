@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
@@ -29,7 +30,7 @@ public class updateRingerService extends Service {
 //	LocationManager locationManager;
 //	public static Location location;
 	
-		private static final String TAG = "RingerService";
+		private static final String TAG = "LocationService";
 		public AudioManager myAM;
 		
 		@Override
@@ -167,6 +168,10 @@ public class updateRingerService extends Service {
 		      latLongString=lat+" "+lng;
 		      Log.d("Lat","lat"+LocationRepresenter.geoLat);
 		      Log.d("Lng","lng"+LocationRepresenter.geoLong);
+		      
+		      setLoc(lat,lng);
+		      
+		    
 		           
 		      
 //		      Toast.makeText(getBaseContext(),"Your Location is: "+ latLongString, 3).show();
@@ -175,7 +180,10 @@ public class updateRingerService extends Service {
 		      }
 		    }
 
-		
+		  public static void setLoc(double lat, double lng) {
+		  		// TODO Auto-generated method stub
+		  		
+		  	}
 
 }
 	
