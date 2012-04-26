@@ -8,6 +8,7 @@ import org.xmlrpc.android.XMLRPCException;
 import edu.wlan.deals.R;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
@@ -69,6 +70,14 @@ public void updateListView(ArrayList list){
 			}});
 
   }
+
+public void startBlue(View v)
+{
+	Intent myIntent = new Intent(this, BluetoothChat.class);
+	this.startActivity(myIntent);
+	
+}
+
 public void popDialog(String name,String type,String mile,String desc) {
 	 final String n=name, t=type, m=mile,d=desc;
 	 final Dialog dialog = new Dialog(this);

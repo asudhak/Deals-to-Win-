@@ -9,4 +9,11 @@
 		android:layout_height="wrap_content"
 		android:id="@+id/listView">
          </ListView>
+         <Button
+        android:id="@+id/Bluetooth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bluetooth"
+        android:onClick="startBlue"
+        ></Button>
 </LinearLayout>
