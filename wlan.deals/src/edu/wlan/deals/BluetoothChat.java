@@ -358,3 +358,5 @@ public class BluetoothChat extends Activity {
     }
 
 }
+
+//END
