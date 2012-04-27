@@ -11,6 +11,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -23,6 +24,8 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class MyDeals extends Activity {
+	public byte[] img_bytes;
+	public byte[] rest;
 public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -68,10 +71,10 @@ public void updateListView(ArrayList list){
 				popDialog((((TextView)arg1.findViewById(R.id.name)).getText()).toString(), (((TextView)arg1.findViewById(R.id.type)).getText()).toString(),(((TextView)arg1.findViewById(R.id.dist)).getText()).toString(),(((TextView)arg1.findViewById(R.id.desc)).getText()).toString());
 
 			}});
-
+	
   }
 
-public void startBlue(View v)
+public void startBlue()
 {
 	Intent myIntent = new Intent(this, BluetoothChat.class);
 	this.startActivity(myIntent);
@@ -90,13 +93,21 @@ public void popDialog(String name,String type,String mile,String desc) {
     TextView tv2 = (TextView) dialog.findViewById(R.id.desc);
     tv2.setText(d);
     
+  
+    
     ImageView i = (ImageView)dialog.findViewById(R.id.imageView1);
     DatabaseHelper db = new DatabaseHelper(getBaseContext());
     byte[] b = db.getImage(n, t, m);
     i.setImageBitmap(BitmapFactory.decodeByteArray(b, 0, b.length));
+    Integer size = b.length;
+    String total =  name + "," + type +  "," + mile +"," + desc + "," + size +",";
+    rest = total.getBytes();
+    img_bytes = b;
+    
    
     Button btn = (Button) dialog.findViewById(R.id.Delete);
     Button btn1 = (Button) dialog.findViewById(R.id.dismiss);
+    Button blue = (Button) dialog.findViewById(R.id.Bluetooth);
     btn1.setOnClickListener(new OnClickListener() {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
@@ -105,7 +116,7 @@ public void popDialog(String name,String type,String mile,String desc) {
 		dialog.dismiss();	
 		}
 	});
-    
+
      btn.setOnClickListener(new OnClickListener(){
          public void onClick(View v){   
        	  DatabaseHelper db = new DatabaseHelper(getBaseContext());
@@ -118,6 +129,21 @@ public void popDialog(String name,String type,String mile,String desc) {
        	  
         }
      });
+      
+     blue.setOnClickListener(new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent myIntent = new Intent(getBaseContext(), BluetoothChat.class);
+			myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			myIntent.putExtra("rest", rest);
+			myIntent.putExtra("image", img_bytes);
+			getBaseContext().startActivity(myIntent);
+		
+		} 
+     });
+     
   dialog.show();  
 }
 }
