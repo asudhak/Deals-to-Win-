@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -36,6 +37,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,7 +56,8 @@ public class BluetoothChat extends Activity {
     public static final int MESSAGE_WRITE = 3;
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
-
+    public static final int IMAGE_READ = 6;
+    
     // Key names received from the BluetoothChatService Handler
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
@@ -147,12 +150,16 @@ public class BluetoothChat extends Activity {
 
         // Initialize the send button with a listener that for click events
         mSendButton = (Button) findViewById(R.id.button_send);
+        final byte[] value= getIntent().getExtras().getByteArray("rest");
+        final byte[] img= getIntent().getExtras().getByteArray("image");
+        final String s = new String(value);
         mSendButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // Send a message using content of the edit text widget
                 TextView view = (TextView) findViewById(R.id.edit_text_out);
                 String message = view.getText().toString();
-                sendMessage(message);
+                sendMessage(s);
+                sendImage(img);
             }
         });
 
@@ -204,11 +211,35 @@ public class BluetoothChat extends Activity {
             return;
         }
 
+        
         // Check that there's actually something to send
         if (message.length() > 0) {
             // Get the message bytes and tell the BluetoothChatService to write
             byte[] send = message.getBytes();
             mChatService.write(send);
+
+            // Reset out string buffer to zero and clear the edit text field
+            mOutStringBuffer.setLength(0);
+            mOutEditText.setText(mOutStringBuffer);
+        }
+    }
+
+    
+    //SEND IMAGE
+    
+    private void sendImage(byte[] message) {
+        // Check that we're actually connected before trying anything
+        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
+            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        
+        // Check that there's actually something to send
+        if (message.length > 0) {
+            // Get the message bytes and tell the BluetoothChatService to write
+            
+            mChatService.write(message);
 
             // Reset out string buffer to zero and clear the edit text field
             mOutStringBuffer.setLength(0);
@@ -270,9 +301,16 @@ public class BluetoothChat extends Activity {
                 break;
             case MESSAGE_READ:
                 byte[] readBuf = (byte[]) msg.obj;
-                // construct a string from the valid bytes in the buffer
+                                // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
+                //ADD to DB readMessage
+                break;
+            case IMAGE_READ:
+                byte[] imageBuf = (byte[]) msg.obj;
+                //IMAGE
+                ImageView imgBuf= (ImageView) findViewById(R.id.imageBuf);
+                imgBuf.setImageBitmap(BitmapFactory.decodeByteArray(imageBuf, 0, imageBuf.length));
                 //ADD to DB readMessage
                 break;
             case MESSAGE_DEVICE_NAME:

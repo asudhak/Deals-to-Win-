@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
+import org.apache.http.util.ByteArrayBuffer;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -445,19 +447,53 @@ public class BluetoothChatService {
         public void run() {
             Log.i(TAG, "BEGIN mConnectedThread");
             byte[] buffer = new byte[1024];
-            int bytes;
-
+            
+            
+            int bytes=0;
+int count =0;
+int size=0;
+ByteArrayBuffer image_buff= new ByteArrayBuffer(1024*500);
             // Keep listening to the InputStream while connected
             while (true) {
                 try {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
-
+                    
+                    if(count==0){
+//                    Log.d("BufferTExt", buffer.toString());
+                    	String s= new String(buffer);
+                    	String[] items=s.split(",");
+                    	size= Integer.parseInt(items[4]);
+                    	
+                    mHandler.obtainMessage(BluetoothChat.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                    Log.d("SIZE_S", items[4]);
+                    Log.d("IMAGE SIZE", ""+size);
+                    count=1;
+                    
+                    continue;
+                    }
+                                        
+                  if(count==1){  
+                	  image_buff.append(buffer, 0, bytes);
+//                      Log.d("ImageBuffer", image_buff.toByteArray().toString());
+                        
+                  }
+                  if(count==1&&image_buff.length()==size)
+                  {
+                	  Log.d("IMAGE", "IAMGE DONE");
+                	  mHandler.obtainMessage(BluetoothChat.IMAGE_READ, bytes, -1, image_buff.toByteArray()).sendToTarget();
+                  }
+                  Log.d("Image_size", ""+ image_buff.length());
+                  Log.d("Read Bytes", ""+ bytes);
+                  
+                    
+                    
+                                        
                     // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(BluetoothChat.MESSAGE_READ, bytes, -1, buffer)
-                            .sendToTarget();
+                    
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
+                   
                     connectionLost();
                     // Start the service over to restart listening mode
                     BluetoothChatService.this.start();

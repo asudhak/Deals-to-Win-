@@ -51,6 +51,9 @@ import org.apache.ws.commons.util.Base64;
 public class dealsActivity extends Activity {
     /** Called when the activity is first created. */
 	
+	//TODO
+	public static int numRcvd=0;
+	public static int numFwd=0;
 	
 	public XMLRPCClient client;
     @Override
@@ -58,7 +61,7 @@ public class dealsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tab1);
         
-        client = new XMLRPCClient("http://192.168.0.4:80/xmlrpc");
+        client = new XMLRPCClient("http://192.168.0.7:8080/xmlrpc");
         InetAddress addr=null;
         try {
 			addr=InetAddress.getLocalHost();

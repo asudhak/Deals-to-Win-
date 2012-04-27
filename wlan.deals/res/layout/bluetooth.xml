@@ -26,6 +26,11 @@
         android:transcriptMode="alwaysScroll"
         android:layout_weight="1"
     />
+    <ImageView
+        android:id="@+id/imageBuf"
+        android:layout_width="200sp"
+        android:layout_height="200sp"
+         />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
