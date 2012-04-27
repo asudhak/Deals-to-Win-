@@ -95,7 +95,7 @@ public class BluetoothChat extends Activity {
            setContentView(R.layout.bluetoothsender);
         }          
         else {
-        	
+        	setContentView(R.layout.bluetooth_recv);
         }
 
         // Get local Bluetooth adapter
@@ -191,13 +191,13 @@ public class BluetoothChat extends Activity {
             }
         
         });
-       
+       }
         // Initialize the BluetoothChatService to perform bluetooth connections
         mChatService = new BluetoothChatService(this, mHandler);
 
         // Initialize the buffer for outgoing messages
         mOutStringBuffer = new StringBuffer("");
-       }
+       
     }
 
     @Override
@@ -249,7 +249,7 @@ public class BluetoothChat extends Activity {
 
             // Reset out string buffer to zero and clear the edit text field
             mOutStringBuffer.setLength(0);
-            mOutEditText.setText(mOutStringBuffer);
+           // mOutEditText.setText(mOutStringBuffer);
         }
     }
     
@@ -267,7 +267,7 @@ public class BluetoothChat extends Activity {
 
             // Reset out string buffer to zero and clear the edit text field
             mOutStringBuffer.setLength(0);
-            mOutEditText.setText(mOutStringBuffer);
+         
         }
     }
 
@@ -306,7 +306,7 @@ public class BluetoothChat extends Activity {
                 switch (msg.arg1) {
                 case BluetoothChatService.STATE_CONNECTED:
 //                    setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
-                    mConversationArrayAdapter.clear();
+                 //   mConversationArrayAdapter.clear();
                     break;
                 case BluetoothChatService.STATE_CONNECTING:
 //                    setStatus(R.string.title_connecting);
@@ -321,7 +321,7 @@ public class BluetoothChat extends Activity {
                 byte[] writeBuf = (byte[]) msg.obj;
                        // construct a string from the buffer
                 String writeMessage = new String(writeBuf);
-                mConversationArrayAdapter.add("Me:  " + writeMessage);
+             //   mConversationArrayAdapter.add("Me:  " + writeMessage);
                 break;
             case MESSAGE_DEVICE_NAME:
                 // save the connected device's name
