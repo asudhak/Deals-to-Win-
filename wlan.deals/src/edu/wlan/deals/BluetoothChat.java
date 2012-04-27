@@ -58,6 +58,7 @@ public class BluetoothChat extends Activity {
     public static final int MESSAGE_TOAST = 5;
     public static final int IMAGE_READ = 6;
     
+
     // Key names received from the BluetoothChatService Handler
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
@@ -90,7 +91,12 @@ public class BluetoothChat extends Activity {
         if(D) Log.e(TAG, "+++ ON CREATE +++");
 
         // Set up the window layout
-        setContentView(R.layout.bluetooth);
+        if(getIntent().getExtras().getString("sender").equals("sender")){
+           setContentView(R.layout.bluetoothsender);
+        }          
+        else {
+        	
+        }
 
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -139,35 +145,59 @@ public class BluetoothChat extends Activity {
     private void setupChat() {
         Log.d(TAG, "setupChat()");
 
-        // Initialize the array adapter for the conversation thread
-        mConversationArrayAdapter = new ArrayAdapter<String>(this, R.layout.message);
-        mConversationView = (ListView) findViewById(R.id.in);
-        mConversationView.setAdapter(mConversationArrayAdapter);
+       // Initialize the array adapter for the conversation thread
+        //     mConversationArrayAdapter = new ArrayAdapter<String>(this, R.layout.message);
+        //       mConversationView = (ListView) findViewById(R.id.in);
+        //          mConversationView.setAdapter(mConversationArrayAdapter);
 
         // Initialize the compose field with a listener for the return key
-        mOutEditText = (EditText) findViewById(R.id.edit_text_out);
-        mOutEditText.setOnEditorActionListener(mWriteListener);
+       // mOutEditText = (EditText) findViewById(R.id.edit_text_out);
+       //  mOutEditText.setOnEditorActionListener(mWriteListener);
 
         // Initialize the send button with a listener that for click events
-        mSendButton = (Button) findViewById(R.id.button_send);
+       
+        
+        //mSendButton = (Button) findViewById(R.id.button_send);
+        if(getIntent().getExtras().getString("sender").equals("sender")){
+        	 TextView tv1= (TextView)findViewById(R.id.dealname);
+        	 tv1.setText(getIntent().getExtras().getString("name"));
+        	 TextView tv2 = (TextView)findViewById(R.id.desc);
+        	 tv2.setText(getIntent().getExtras().getString("desc"));
+        	 byte[] i =  getIntent().getExtras().getByteArray("image");
+        	 ImageView ii = (ImageView)findViewById(R.id.imageView1);
+        	 ii.setImageBitmap(BitmapFactory.decodeByteArray(i, 0, i.length));
+        	 
+        	 Button btn = (Button) findViewById(R.id.Cancel);
+        	 Button btn1 = (Button) findViewById(R.id.Send);
+        	 
+        	 
+        
+        
         final byte[] value= getIntent().getExtras().getByteArray("rest");
-        final byte[] img= getIntent().getExtras().getByteArray("image");
-        final String s = new String(value);
-        mSendButton.setOnClickListener(new OnClickListener() {
+        final byte[] img = getIntent().getExtras().getByteArray("image");
+        final String s= new String(value);
+       
+        btn1.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // Send a message using content of the edit text widget
-                TextView view = (TextView) findViewById(R.id.edit_text_out);
-                String message = view.getText().toString();
+             //   TextView view = (TextView) findViewById(R.id.edit_text_out);
+               // String message = view.getText().toString();
+                
                 sendMessage(s);
+               
+                Log.i("Size",""+img.length);
                 sendImage(img);
+                
             }
+        
         });
-
+       
         // Initialize the BluetoothChatService to perform bluetooth connections
         mChatService = new BluetoothChatService(this, mHandler);
 
         // Initialize the buffer for outgoing messages
         mOutStringBuffer = new StringBuffer("");
+       }
     }
 
     @Override
@@ -211,7 +241,6 @@ public class BluetoothChat extends Activity {
             return;
         }
 
-        
         // Check that there's actually something to send
         if (message.length() > 0) {
             // Get the message bytes and tell the BluetoothChatService to write
@@ -223,9 +252,6 @@ public class BluetoothChat extends Activity {
             mOutEditText.setText(mOutStringBuffer);
         }
     }
-
-    
-    //SEND IMAGE
     
     private void sendImage(byte[] message) {
         // Check that we're actually connected before trying anything
@@ -234,11 +260,9 @@ public class BluetoothChat extends Activity {
             return;
         }
 
-        
         // Check that there's actually something to send
         if (message.length > 0) {
             // Get the message bytes and tell the BluetoothChatService to write
-            
             mChatService.write(message);
 
             // Reset out string buffer to zero and clear the edit text field
@@ -299,20 +323,6 @@ public class BluetoothChat extends Activity {
                 String writeMessage = new String(writeBuf);
                 mConversationArrayAdapter.add("Me:  " + writeMessage);
                 break;
-            case MESSAGE_READ:
-                byte[] readBuf = (byte[]) msg.obj;
-                                // construct a string from the valid bytes in the buffer
-                String readMessage = new String(readBuf, 0, msg.arg1);
-                mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
-                //ADD to DB readMessage
-                break;
-            case IMAGE_READ:
-                byte[] imageBuf = (byte[]) msg.obj;
-                //IMAGE
-                ImageView imgBuf= (ImageView) findViewById(R.id.imageBuf);
-                imgBuf.setImageBitmap(BitmapFactory.decodeByteArray(imageBuf, 0, imageBuf.length));
-                //ADD to DB readMessage
-                break;
             case MESSAGE_DEVICE_NAME:
                 // save the connected device's name
                 mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
@@ -322,6 +332,26 @@ public class BluetoothChat extends Activity {
             case MESSAGE_TOAST:
                 Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),
                                Toast.LENGTH_SHORT).show();
+                break;
+            case MESSAGE_READ:
+                byte[] readBuf = (byte[]) msg.obj;
+                                // construct a string from the valid bytes in the buffer
+                String readMessage = new String(readBuf, 0, msg.arg1);
+                String items[]=readMessage.split(",");
+                
+                TextView dealsText = (TextView) findViewById(R.id.blue_recv_dealname);
+                dealsText.setText(items[0]);
+                TextView dealsdesc = (TextView) findViewById(R.id.blue_recv_desc);
+                dealsdesc.setText(items[3]);
+//                mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
+                //ADD to DB readMessage
+                break;
+            case IMAGE_READ:
+                byte[] imageBuf = (byte[]) msg.obj;
+                //IMAGE
+                ImageView imgBuf= (ImageView) findViewById(R.id.blue_recv_imageView1);
+                imgBuf.setImageBitmap(BitmapFactory.decodeByteArray(imageBuf, 0, imageBuf.length));
+                //ADD to DB readMessage
                 break;
             }
         }

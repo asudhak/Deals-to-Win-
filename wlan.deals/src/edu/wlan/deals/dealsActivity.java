@@ -26,6 +26,7 @@ import com.google.android.maps.GeoPoint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -61,7 +62,7 @@ public class dealsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tab1);
         
-        client = new XMLRPCClient("http://192.168.0.7:8080/xmlrpc");
+        client = new XMLRPCClient("http://192.168.0.4:80/xmlrpc");
         InetAddress addr=null;
         try {
 			addr=InetAddress.getLocalHost();
@@ -153,6 +154,23 @@ public class dealsActivity extends Activity {
                      }
                });   
                
+             Button blue = (Button) dialog.findViewById(R.id.Blue_getDeals);
+             
+             blue.setOnClickListener(new OnClickListener(){
+
+         		@Override
+         		public void onClick(View v) {
+         			// TODO Auto-generated method stub
+         			Toast.makeText(getBaseContext(), "BLUE", 4).show();
+         			Intent myIntent = new Intent(getBaseContext(), BluetoothChat.class);
+         			myIntent.putExtra("sender", "");
+         			myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+         			getBaseContext().startActivity(myIntent);
+         		
+         		} 
+              });
+
+
                    
                
 
@@ -237,8 +255,7 @@ public class dealsActivity extends Activity {
         dialog.setTitle("Coupon Details");
         dialog.show();  
         
-        
-        
+            
         
         
   
@@ -267,6 +284,7 @@ public class dealsActivity extends Activity {
             }
         });
         
+                
         
         getImage asyncImage= new getImage(image, btn);
         asyncImage.execute(Integer.parseInt(id)); //Change id

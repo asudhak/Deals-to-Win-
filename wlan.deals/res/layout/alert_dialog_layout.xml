@@ -40,6 +40,13 @@
 	android:hapticFeedbackEnabled="true"
 	/>
 	<Button
+	android:id="@+id/Blue_getDeals"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:text="Get Deals via Bluetooth"
+	android:hapticFeedbackEnabled="true"
+	/>
+	<Button
 	android:id="@+id/dismiss"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"

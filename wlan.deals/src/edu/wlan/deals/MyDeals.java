@@ -137,8 +137,12 @@ public void popDialog(String name,String type,String mile,String desc) {
 			// TODO Auto-generated method stub
 			Intent myIntent = new Intent(getBaseContext(), BluetoothChat.class);
 			myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			myIntent.putExtra("sender", "sender");
 			myIntent.putExtra("rest", rest);
 			myIntent.putExtra("image", img_bytes);
+			myIntent.putExtra("name", n);
+			myIntent.putExtra("type", t);
+			myIntent.putExtra("desc", d);
 			getBaseContext().startActivity(myIntent);
 		
 		} 
