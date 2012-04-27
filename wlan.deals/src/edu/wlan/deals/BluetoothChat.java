@@ -191,7 +191,7 @@ public class BluetoothChat extends Activity {
             }
         
         });
-        }
+       }
         // Initialize the BluetoothChatService to perform bluetooth connections
         mChatService = new BluetoothChatService(this, mHandler);
 
@@ -249,7 +249,7 @@ public class BluetoothChat extends Activity {
 
             // Reset out string buffer to zero and clear the edit text field
             mOutStringBuffer.setLength(0);
-            mOutEditText.setText(mOutStringBuffer);
+           // mOutEditText.setText(mOutStringBuffer);
         }
     }
     
@@ -267,7 +267,7 @@ public class BluetoothChat extends Activity {
 
             // Reset out string buffer to zero and clear the edit text field
             mOutStringBuffer.setLength(0);
-            mOutEditText.setText(mOutStringBuffer);
+         
         }
     }
 
@@ -306,7 +306,7 @@ public class BluetoothChat extends Activity {
                 switch (msg.arg1) {
                 case BluetoothChatService.STATE_CONNECTED:
 //                    setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
-//                    mConversationArrayAdapter.clear();
+                 //   mConversationArrayAdapter.clear();
                     break;
                 case BluetoothChatService.STATE_CONNECTING:
 //                    setStatus(R.string.title_connecting);
@@ -321,7 +321,7 @@ public class BluetoothChat extends Activity {
                 byte[] writeBuf = (byte[]) msg.obj;
                        // construct a string from the buffer
                 String writeMessage = new String(writeBuf);
-//                mConversationArrayAdapter.add("Me:  " + writeMessage);
+             //   mConversationArrayAdapter.add("Me:  " + writeMessage);
                 break;
             case MESSAGE_DEVICE_NAME:
                 // save the connected device's name
@@ -338,8 +338,6 @@ public class BluetoothChat extends Activity {
                                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
                 String items[]=readMessage.split(",");
-                Log.d("ITEMS", readMessage);
-                Log.d("ITEMS0", items[0]+items[3]);
                 
                 TextView dealsText = (TextView) findViewById(R.id.blue_recv_dealname);
                 dealsText.setText(items[0]);
