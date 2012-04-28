@@ -192,6 +192,19 @@ public class BluetoothChat extends Activity {
                 Log.i("Size",""+img.length);
                 sendImage(img);
                 
+                int existing_coupons=0;
+         		try{
+         			existing_coupons=Integer.parseInt(dealsActivity.stats.getString("coupons_b_send", "0"));	
+         		}
+         		catch(NullPointerException e)
+         		{
+         			existing_coupons=0;
+         		}
+         		 
+         		 
+         		dealsActivity.stats.edit().putString("coupons_b_send", existing_coupons+1 +"").commit();
+    			
+                
             }
         
         });
@@ -363,6 +376,19 @@ public class BluetoothChat extends Activity {
                 
                 BitmapFactory Bm= new BitmapFactory();
 		        final Bitmap pic=Bm.decodeByteArray(imageBuf,0,imageBuf.length);
+		        
+		        int existing_coupons=0;
+	     		try{
+	     			existing_coupons=Integer.parseInt(dealsActivity.stats.getString("coupons_r_b", "0"));	
+	     		}
+	     		catch(NullPointerException e)
+	     		{
+	     			existing_coupons=0;
+	     		}
+	     		 
+	     		 
+	     		dealsActivity.stats.edit().putString("coupons_r_b", existing_coupons+1 +"").commit();
+				
 		        
 		        Button btn = new Button(getBaseContext());
 		        btn.setText("Add");

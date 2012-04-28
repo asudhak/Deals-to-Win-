@@ -108,7 +108,9 @@ public class mainUITabs extends TabActivity {
 //            +"\n Wifi Signal Level: " +  android.net.wifi.WifiManager.calculateSignalLevel(wifiInfo.getRssi(), 101)
             +"\n Wifi SSID: " +  wifiInfo.getSSID()
             +"\n Wifi LinkSpeed: " +  wifiInfo.getLinkSpeed()
-            +"\n Coupons recieved:" + dealsActivity.stats.getString("coupons_r", ""));
+            +"\n Coupons recieved:" + dealsActivity.stats.getString("coupons_r", "")
+            +"\n Coupons recieved via BT:" + dealsActivity.stats.getString("coupons_r_b", "")
+            +"\n Coupons sent via BT:" + dealsActivity.stats.getString("coupons_b_send", ""));
             
             AlertDialog alert_usage = builder_usage.create();
             alert_usage.show();
