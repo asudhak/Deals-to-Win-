@@ -27,6 +27,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -51,7 +52,7 @@ import android.widget.Toast;
 import org.apache.ws.commons.util.Base64;
 public class dealsActivity extends Activity {
     /** Called when the activity is first created. */
-	
+	public static SharedPreferences stats=null; //STORE values of forwarded/recvd coupons (via Bluetooth and WIfi)
 	//TODO
 	public static int numRcvd=0;
 	public static int numFwd=0;
@@ -61,8 +62,9 @@ public class dealsActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tab1);
+        stats= getPreferences(0);
         
-        client = new XMLRPCClient("http://192.168.0.4:80/xmlrpc");
+        client = new XMLRPCClient("http://192.168.0.13:8080/xmlrpc");
         InetAddress addr=null;
         try {
 			addr=InetAddress.getLocalHost();
@@ -75,6 +77,10 @@ public class dealsActivity extends Activity {
          
     }
     public Dialog dialog;
+    
+    
+    
+    
     public void getData(View V)
     {
 
@@ -102,12 +108,18 @@ public class dealsActivity extends Activity {
        		Toast.makeText(getBaseContext(), "No Internet ConnectioN Found", 4).show();
        		  dialog.dismiss();
        	  }
-               
-               
+       	
+       	  if(LocationRepresenter.location==null)
+       	  {
+       		  dialog.dismiss();
+       	  }
+       	  
+   	               
                
              final RadioGroup mRadioGroup = (RadioGroup) dialog.findViewById(R.id.group1);
              mRadioGroup.check(R.id.food);
              final SeekBar dia = (SeekBar)dialog.findViewById(R.id.seekbar);
+             dia.setMax(5);
              
              Button button_get = (Button) dialog.findViewById(R.id.getDeals);
              Button button_cancel=(Button) dialog.findViewById(R.id.dismiss);
@@ -130,6 +142,7 @@ public class dealsActivity extends Activity {
                         	  Toast.makeText(toastContext, "No Profile Selected ! Default Profile Set", 2);
                         	
                           };
+                          
                           int dia_location=dia.getProgress();
                           
                           RadioButton checkedRadioButton = (RadioButton) mRadioGroup.findViewById(selected_pref);
@@ -137,11 +150,13 @@ public class dealsActivity extends Activity {
                           //Toast.makeText(toastContext, "The Choice is: "+checkedRadioButton.getText().toString()+" with dia:" + dia_location, 5).show();
                      
                           //STORE PARAMS
-                          Object[] params=new Object[5];
-//                      			params[0]=LocationRepresenter.location.getLatitude();
-//                      			params[1]= LocationRepresenter.location.getLongitude();
-                      			params[2]=dia_location;
-                      			params[3]=selected_pref_str;
+                          Object[] params=new Object[4];
+                      			params[0]=LocationRepresenter.location.getLatitude();
+                      			params[1]= LocationRepresenter.location.getLongitude();
+                      			params[3]=dia_location;
+                      			params[2]=selected_pref_str;
+                      			
+                      			Log.d("Vars", params[0].toString()+ " " + params[1].toString() + " "+ params[2].toString()+ " " + params[3].toString() );
                       			
                           //END OF STORE PARAMS
                           
@@ -181,17 +196,30 @@ public class dealsActivity extends Activity {
     {
 	
     	
-         Object[] params1 = new Object[]{new Integer(33), new Integer(9)};
+//         Object[] params1 = new Object[]{new Integer(33), new Integer(9)};
        ArrayList list=new ArrayList();
 //         params=null;
          try {
      		
-     		Object[] result = (Object[])client.callEx("queryDataBase.queryDB", params1);
+     		Object[] result = (Object[])client.callEx("queryDataBase.queryDB", params);
      		Toast.makeText(getBaseContext(), "Try", 4).show();
      		 for(int i=0;i<result.length;i++)
              {
             	 list.add(result[i]);
              }
+     		 
+     		int existing_coupons=0;
+     		try{
+     			existing_coupons=Integer.parseInt(stats.getString("coupons_r", "0"));	
+     		}
+     		catch(NullPointerException e)
+     		{
+     			existing_coupons=0;
+     		}
+     		 
+     		 
+     		stats.edit().putString("coupons_r", existing_coupons+list.size()+"").commit();
+			  
      		
      	}
          
@@ -219,8 +247,7 @@ public class dealsActivity extends Activity {
    		
    		
    	    
-   	    SimpleAdapter adapter = new SimpleAdapter(this, list,
-   				R.layout.row, from, to);
+   	    SimpleAdapter adapter = new SimpleAdapter(this, list, R.layout.row, from, to);
    	    
    	    final ListView listView = (ListView) findViewById(R.id.listView);
    	    
@@ -346,9 +373,7 @@ public class dealsActivity extends Activity {
 		        bm=pic;
 					
    			return pic;
-   			
-
-   		}  
+   			   		}  
    		
    		
 		protected void onPostExecute(Bitmap img) {

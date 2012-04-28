@@ -11,4 +11,6 @@ EXTRA CREDIT
 
 5. Overlay of deals' location on the map
 
-6. 
+6. Null pointer exception for location checking
+
+7. Arithmetic exception for WifI 

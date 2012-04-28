@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +39,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +59,9 @@ public class BluetoothChat extends Activity {
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
     public static final int IMAGE_READ = 6;
-    
+    public String  n;
+    public String d;
+    public String t;
 
     // Key names received from the BluetoothChatService Handler
     public static final String DEVICE_NAME = "device_name";
@@ -341,8 +345,12 @@ public class BluetoothChat extends Activity {
                 
                 TextView dealsText = (TextView) findViewById(R.id.blue_recv_dealname);
                 dealsText.setText(items[0]);
+                n=items[0];
                 TextView dealsdesc = (TextView) findViewById(R.id.blue_recv_desc);
                 dealsdesc.setText(items[3]);
+                t=items[1];
+                
+                
 //                mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
                 //ADD to DB readMessage
                 break;
@@ -351,6 +359,23 @@ public class BluetoothChat extends Activity {
                 //IMAGE
                 ImageView imgBuf= (ImageView) findViewById(R.id.blue_recv_imageView1);
                 imgBuf.setImageBitmap(BitmapFactory.decodeByteArray(imageBuf, 0, imageBuf.length));
+                
+                
+                BitmapFactory Bm= new BitmapFactory();
+		        final Bitmap pic=Bm.decodeByteArray(imageBuf,0,imageBuf.length);
+		        
+		        Button btn = new Button(getBaseContext());
+		        btn.setText("Add");
+		        LinearLayout layout;
+		        layout = (LinearLayout) findViewById(R.id.blue_linear); 
+		        layout.addView(btn);
+		        btn.setOnClickListener(new OnClickListener() {
+		        	 public void onClick(View v) {
+                       store(n,t,"abc",d, pic);
+                       finish();
+		        	}
+		        });
+                
                 //ADD to DB readMessage
                 break;
             }
@@ -385,7 +410,11 @@ public class BluetoothChat extends Activity {
             }
         }
     }
-
+    public void store(String n,String t,String m,String d,Bitmap b){
+    	DatabaseHelper db = new DatabaseHelper(getBaseContext());
+    	db.insert(n, t, 10.0, d, b);
+    	
+    }
     private void connectDevice(Intent data, boolean secure) {
         // Get the device MAC address
         String address = data.getExtras()
